@@ -1301,11 +1301,11 @@ class VIEW3D_PT_EBR_Blend_Controls(bpy.types.Panel):
             col.prop(armature, '["Left Bottom Eyeline"]', text='Left Eyeline', slider=True)
             col.prop(armature, '["Right Bottom Eyeline"]', text='Right Eyeline', slider=True)
             col.prop(armature, '["Left Pupil"]', text='Left Pupil', slider=True)
-            col.prop(armature, '["Left Pupil 2"]', text='Left Pupil 2', slider=True)
             col.prop(armature, '["Right Pupil"]', text='Right Pupil', slider=True)
-            col.prop(armature, '["Right Pupil 2"]', text='Right Pupil 2', slider=True)
-            col.prop(armature, '["Eye Switch"]', text='Eye Switch', slider=True)
-            col.prop(armature, '["Eye Glow"]', text='Eye Glow', slider=True)
+            col.prop(armature, '["Left Eye Switch"]', text='Left Eye Switch', slider=True)
+            col.prop(armature, '["Right Eye Switch"]', text='Right Eye Switch', slider=True)
+            col.prop(armature, '["Left Eye Glow"]', text='Left Eye Glow', slider=True)
+            col.prop(armature, '["Right Eye Glow"]', text='Right Eye Glow', slider=True)
             col.prop(armature, '["Lipstick"]', text='Lipstick', slider=True)
             col.prop(armature, '["Eyelash Makeup"]', text='Eyleash Makeup', slider=True)
 
@@ -1518,4 +1518,5 @@ def unregister():
     del bpy.types.Scene.ebr_face_colors_visible
 
 if __name__ == "__main__":
+
     register()
