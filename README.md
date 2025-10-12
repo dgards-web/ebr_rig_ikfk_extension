@@ -52,22 +52,22 @@ New Feature List
 The amount of new features in the updated rig is huge, because of that, I have most likely missed a few here. Here is a list of them all.
 
 
-Overhauled Face Rig
-Bone controllers to animate every part of the face (Mouth, Eyes, Dimples, Eye Makeup (for P.I.X.A.L & Sora), Eyebrows, Eyelashes, Pupils)
-Bone controller to hide parts of the eye
-Different pupil shapes! Some scenes in Ninjago temporarily use different shapes for the pupil, so this has been included
-Bone controller for eyelines
-Lipstick toggle
-Eye Makeup toggle
-Eye glow
-Eye switch (for ZANE or P.I.X.A.L)
-Colour switches for Mouth, Eyes, Dimples, Eye Makeup, Eyelashes, Eyeline, Teeth, Lipstick, Tongue, Pupils, Outer Eye, Head… 
-IK/FK controls for the arms and legs (eg. controls to switch from IK -> FK and from FK -> IK)
-Controls to switch between the size of the rig (Between Adult, and child/smaller sizes) (And yes we will do the Avatar Long legs later 😊)
-Mouth shapes flip between happy or sad expressions
-Another Center of mass bone (why was this added…)
-Bone controllers to rotate or scale nearly every part of the face
-Alternative Eyelash and Eyeline shapes
+- Overhauled Face Rig
+- Bone controllers to animate every part of the face (Mouth, Eyes, Dimples, Eye Makeup (for P.I.X.A.L & Sora), Eyebrows, Eyelashes, Pupils)
+- Bone controller to hide parts of the eye
+- Different pupil shapes! Some scenes in Ninjago temporarily use different shapes for the pupil, so this has been included
+- Bone controller for eyelines
+- Lipstick toggle
+- Eye Makeup toggle
+- Eye glow
+- Eye switch (for ZANE or P.I.X.A.L)
+- Colour switches for Mouth, Eyes, Dimples, Eye Makeup, Eyelashes, Eyeline, Teeth, Lipstick, Tongue, Pupils, Outer Eye, Head… 
+- IK/FK controls for the arms and legs (eg. controls to switch from IK -> FK and from FK -> IK)
+- Controls to switch between the size of the rig (Between Adult, and child/smaller sizes) (And yes we will do the Avatar Long legs later 😊)
+- Mouth shapes flip between happy or sad expressions
+- Another Center of mass bone (why was this added…)
+- Bone controllers to rotate or scale nearly every part of the face
+- Alternative Eyelash and Eyeline shapes
 
 
 ________________________________________________________________________________________________________________________________________________________________________________________________________________________
