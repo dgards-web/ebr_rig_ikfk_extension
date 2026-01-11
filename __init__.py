@@ -1,28 +1,33 @@
 bl_info = {
     "name": "EBR Rig IKFK Extension",
     "author": "Dgards, DvqJackson_2, NJ Central",
-    "version": (1, 0, 0),
-    "blender": (3, 0, 0),
-    "location": "View3D > Sidebar > Item",
-    "description": "Adds IK/FK snapping and rig controls for EBR rigs",
-    "category": "Rigging",
+    "version": (1, 1, 0),
+    "blender": (4, 3, 0),
+    "location": "View3D > Sidebar > EpicBendyRig",
+    "description": "EpicBendyRig (Updated)",
+    "category": "Rigging, Animation",
     "support": "COMMUNITY",
-    "doc_url": "",
-    "tracker_url": "",
+    "wiki_url": "https://github.com/dgards-web/ebr_rig_ikfk_extension",
 }
 
-import bpy
-import math
+import os
 import json
+import math
 import collections
 import traceback
+import bpy
+import mathutils
+import addon_utils
 from math import pi
-from bpy.props import BoolProperty, StringProperty
+from bpy.props import BoolProperty, IntProperty, StringProperty
+from bpy.types import PropertyGroup, Panel, Scene
 from mathutils import Euler, Matrix, Quaternion, Vector
 from rna_prop_ui import rna_idprop_quote_path
 
 # Unique identifier for the rig
 EBR_rig_id = "eb41kfksn4p"
+
+######IK/FK SNAPPING######
 
 # Define the constraint details
 # Arm constraints
@@ -1175,13 +1180,15 @@ class OBJECT_OT_master_bone_snap(bpy.types.Operator):
             bpy.ops.object.mode_set(mode=current_mode)
         return {'FINISHED'}
 
-# Main Panel for EBR Rig Controls
-class VIEW3D_PT_EBR_Rig_Layers_UI(bpy.types.Panel):
+######PANEL######
+
+# Epic Bendy Rig Panels
+class VIEW3D_PT_Epic_Bendy_Rig_UI(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = "Item"
-    bl_label = "EBR Rig Controls"
-    bl_idname = f"VIEW3D_PT_rig_ui_{EBR_rig_id}"
+    bl_category = "EpicBendyRig"
+    bl_label = "EpicBendyRig"
+    bl_idname = f"EPIC_BENDYRIG_PT_PANEL_{EBR_rig_id}"
     
     @classmethod
     def poll(cls, context):
@@ -1189,18 +1196,24 @@ class VIEW3D_PT_EBR_Rig_Layers_UI(bpy.types.Panel):
             return context.active_object.data.get("rig_id") == EBR_rig_id
         except (AttributeError, KeyError, TypeError):
             return False
-
+    
     def draw(self, context):
-        pass  # Content moved to subpanels
+        layout = self.layout
+        scene = context.scene
+        
+        box = layout.box()
+        row = box.row()
+        row.operator("wm.url_open", text="User Manual", icon= 'URL', emboss= False).url = "https://docs.google.com/document/d/1BhCpr-TOIyZ56FseGPRxJ_vOGmBoA9Z2b2a8teh8Uiw/edit?tab=t.0"
+        row = layout.row(align=True)
 
 # Subpanel for IK/FK Snap Controls
-class VIEW3D_PT_EBR_Snap_Controls(bpy.types.Panel):
+class VIEW3D_PT_IKFK_Snap_Controls(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = "Item"
+    bl_category = "EpicBendyRig"
     bl_label = "IK/FK Snap Controls"
-    bl_idname = f"VIEW3D_PT_snap_controls_{EBR_rig_id}"
-    bl_parent_id = f"VIEW3D_PT_rig_ui_{EBR_rig_id}"
+    bl_idname = f"EPIC_BENDYRIG_PT_SnapControls_{EBR_rig_id}"
+    bl_parent_id = f"EPIC_BENDYRIG_PT_PANEL_{EBR_rig_id}"
     bl_options = {'DEFAULT_CLOSED'}
     
     @classmethod
@@ -1254,13 +1267,13 @@ class VIEW3D_PT_EBR_Snap_Controls(bpy.types.Panel):
         box.operator("object.master_bone_snap", icon="SNAP_ON", text="Master Bone Snap")
 
 # Subpanel for IK/FK Blend Controls
-class VIEW3D_PT_EBR_Blend_Controls(bpy.types.Panel):
+class VIEW3D_PT_IKFK_Blend_Controls(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = "Item"
+    bl_category = "EpicBendyRig"
     bl_label = "IK/FK Blend Controls"
-    bl_idname = f"VIEW3D_PT_blend_controls_{EBR_rig_id}"
-    bl_parent_id = f"VIEW3D_PT_rig_ui_{EBR_rig_id}"
+    bl_idname = f"EPIC_BENDYRIG_PT_BlendControls_{EBR_rig_id}"
+    bl_parent_id = f"EPIC_BENDYRIG_PT_PANEL_{EBR_rig_id}"
     bl_options = {'DEFAULT_CLOSED'}
     
     @classmethod
@@ -1335,12 +1348,14 @@ class VIEW3D_PT_EBR_Blend_Controls(bpy.types.Panel):
             col.prop(armature, '["Eyelines Color"]', text='Eyelines Color')
 
 # Panel for Rig Layers
-class VIEW3D_PT_EBR_IK_FK_Snap_UI(bpy.types.Panel):
+class VIEW3D_PT_EBR_Rig_Layers_UI(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = "Item"
     bl_label = "EBR Rig Layers"
-    bl_idname = f"VIEW3D_PT_rig_layers_ui_{EBR_rig_id}"
+    bl_idname = f"EPIC_BENDYRIG_PT_EBR_Rig_Layers_{EBR_rig_id}"
+    bl_parent_id = f"EPIC_BENDYRIG_PT_PANEL_{EBR_rig_id}"
+    bl_options = {'DEFAULT_CLOSED'}
     
     @classmethod
     def poll(cls, context):
@@ -1474,6 +1489,8 @@ class VIEW3D_PT_EBR_IK_FK_Snap_UI(bpy.types.Panel):
             current_nested_row = current_row.row()
             current_nested_row.prop(bone_collection, 'is_visible', toggle=True, text=collection_name)
 
+######REGISTRATION######
+
 # Classes to register
 classes = (
     OBJECT_OT_fk_to_ik_snap_right_arm,
@@ -1493,10 +1510,10 @@ classes = (
     OBJECT_OT_fk_to_ik_snap_left_sleg,
     OBJECT_OT_ik_to_fk_snap_left_sleg,
     OBJECT_OT_master_bone_snap,
+    VIEW3D_PT_Epic_Bendy_Rig_UI,
+    VIEW3D_PT_IKFK_Snap_Controls,
+    VIEW3D_PT_IKFK_Blend_Controls,
     VIEW3D_PT_EBR_Rig_Layers_UI,
-    VIEW3D_PT_EBR_Snap_Controls,
-    VIEW3D_PT_EBR_Blend_Controls,
-    VIEW3D_PT_EBR_IK_FK_Snap_UI,
 )
 
 # Registration function
