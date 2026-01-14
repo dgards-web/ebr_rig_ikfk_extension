@@ -1,7 +1,7 @@
 bl_info = {
     "name": "EBR Rig IKFK Extension",
     "author": "Dgards, DvqJackson_2, NJ Central",
-    "version": (1, 1, 0),
+    "version": (1, 1, 1),
     "blender": (4, 3, 0),
     "location": "View3D > Sidebar > EpicBendyRig",
     "description": "EpicBendyRig (Updated)",
@@ -18,6 +18,8 @@ import traceback
 import bpy
 import mathutils
 import addon_utils
+import sys
+import subprocess
 from math import pi
 from bpy.props import BoolProperty, IntProperty, StringProperty
 from bpy.types import PropertyGroup, Panel, Scene
@@ -1180,6 +1182,34 @@ class OBJECT_OT_master_bone_snap(bpy.types.Operator):
             bpy.ops.object.mode_set(mode=current_mode)
         return {'FINISHED'}
 
+######USER MANUAL######
+
+class MYADDON_OT_open_manual(bpy.types.Operator):
+    bl_idname = "epic_bendyrig.open_manual"
+    bl_label = "Open User Manual"
+    bl_description = "Open the bundled PDF manual"
+
+    def execute(self, context):
+        addon_dir = os.path.dirname(os.path.realpath(__file__))
+        pdf_path = os.path.join(addon_dir, "docs", "EpicBendyRig V1.5 Documentation.pdf")
+
+        if not os.path.exists(pdf_path):
+            self.report({'ERROR'}, f"Manual not found: {pdf_path}")
+            return {'CANCELLED'}
+
+        try:
+            if sys.platform.startswith("win"):
+                os.startfile(pdf_path)  # type: ignore[attr-defined]
+            elif sys.platform == "darwin":
+                subprocess.Popen(["open", pdf_path])
+            else:
+                subprocess.Popen(["xdg-open", pdf_path])
+        except Exception as e:
+            self.report({'ERROR'}, f"Failed to open manual: {e}")
+            return {'CANCELLED'}
+
+        return {'FINISHED'}
+
 ######PANEL######
 
 # Epic Bendy Rig Panels
@@ -1203,7 +1233,7 @@ class VIEW3D_PT_Epic_Bendy_Rig_UI(bpy.types.Panel):
         
         box = layout.box()
         row = box.row()
-        row.operator("wm.url_open", text="User Manual", icon= 'URL', emboss= False).url = "https://docs.google.com/document/d/1BhCpr-TOIyZ56FseGPRxJ_vOGmBoA9Z2b2a8teh8Uiw/edit?tab=t.0"
+        row.operator("epic_bendyrig.open_manual", text="User Manual", icon='URL', emboss=False)
         row = layout.row(align=True)
 
 # Subpanel for IK/FK Snap Controls
@@ -1514,6 +1544,7 @@ classes = (
     VIEW3D_PT_IKFK_Snap_Controls,
     VIEW3D_PT_IKFK_Blend_Controls,
     VIEW3D_PT_EBR_Rig_Layers_UI,
+    MYADDON_OT_open_manual,
 )
 
 # Registration function
